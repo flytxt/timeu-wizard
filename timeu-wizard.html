@@ -239,7 +239,7 @@ Custom property | Description | Default
       <span id="filling" class="line" style$="transform: scale({{_calculateFilling(steps,step,vertical)}});"></span>
       <ul id="wizard">
         <template is="dom-repeat" items="{{steps}}" >
-          <li class$="{{_computeClass(index,item,step,incomplete)}}" data-content$="{{item.content}}" on-tap="_handleItemTap">
+          <li class$="{{_computeClass(index,item.valid,step,lastVisited)}}" data-content$="{{item.content}}" on-tap="_handleItemTap">
             <div class="checkicon">
               <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;">
                 <g>
@@ -347,16 +347,17 @@ Custom property | Description | Default
         return item;
       },
 
-      _computeClass: function(index,item,step, incomplete) {
+      _computeClass: function(index,valid,step, lastVisited) {
         if (index+1 == step) {
           return "active";
         }
         
-        else if ((index+1) < incomplete || (index+1) < step) {
-          return "done";
-        }
-        else if (index+1 == incomplete) {
-          return "incomplete";
+        else if ((index+1) <= lastVisited || (index+1) < step) {
+          if (valid) {
+            return "done";
+          } else {
+            return "incomplete";
+          }
         }
         return "";
       },
